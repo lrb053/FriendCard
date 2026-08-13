@@ -117,15 +117,70 @@
 
     </div>
 
-    <script>
+    <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
 
-        function shareCard() {
+<script>
 
-            alert("เดี๋ยวเราจะเชื่อมระบบส่งให้เพื่อนกับ LINE");
+    const LIFF_ID = "2011088879-uJOA8rZe";
+
+    async function main() {
+
+        try {
+
+            await liff.init({
+                liffId: LIFF_ID
+            });
+
+            console.log("LIFF เริ่มทำงานแล้ว");
+
+        } catch (error) {
+
+            console.error(error);
 
         }
 
-    </script>
+    }
+
+    main();
+
+    async function shareCard() {
+
+        if (!liff.isLoggedIn()) {
+
+            liff.login();
+
+            return;
+
+        }
+
+        if (!liff.isApiAvailable("shareTargetPicker")) {
+
+            alert("อุปกรณ์หรือ LINE เวอร์ชันนี้ไม่รองรับการแชร์");
+
+            return;
+
+        }
+
+        try {
+
+            await liff.shareTargetPicker([
+                {
+                    type: "text",
+                    text: "🎉 โปรโมชั่นพิเศษ\n\nดูรายละเอียดได้ที่นี่:\nhttps://lrb053.github.io/FriendCard/"
+                }
+            ]);
+
+        } catch (error) {
+
+            console.error(error);
+
+            alert("ไม่สามารถแชร์ได้");
+
+        }
+
+    }
+
+</script>
 
 </body>
 </html>
