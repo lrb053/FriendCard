@@ -1,12 +1,19 @@
 <!DOCTYPE html>
 <html lang="th">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <title>Friend Card</title>
 
     <style>
+
         * {
             box-sizing: border-box;
         }
@@ -22,7 +29,7 @@
             width: 100%;
             max-width: 480px;
             margin: 20px auto;
-            background: #ffffff;
+            background: white;
             border-radius: 20px;
             overflow: hidden;
             box-shadow: 0 5px 20px rgba(0,0,0,0.10);
@@ -59,8 +66,6 @@
             margin-top: 12px;
             border: none;
             border-radius: 12px;
-            text-align: center;
-            text-decoration: none;
             font-size: 16px;
             font-weight: bold;
             cursor: pointer;
@@ -75,112 +80,239 @@
             background: #222;
             color: white;
         }
+
     </style>
+
 </head>
+
 
 <body>
 
-    <div class="card">
 
-        <img
-            class="image"
-            src="https://placehold.co/800x500"
-            alt="Friend Card"
-        >
+<div class="card">
 
-        <div class="content">
 
-            <div class="title">
-                🎉 โปรโมชั่นพิเศษ
-            </div>
+    <img
+        class="image"
+        src="https://placehold.co/800x500"
+        alt="Friend Card"
+    >
 
-            <div class="description">
-                รายละเอียดโปรโมชั่นหรือข้อความที่คุณต้องการ
-                สามารถใส่ตรงนี้ได้เลย
-            </div>
 
-            <a
-                class="button green"
-                href="#"
-            >
-                ดูรายละเอียด
-            </a>
+    <div class="content">
 
-            <button
-                class="button black"
-                onclick="shareCard()"
-            >
-                📤 ส่งให้เพื่อน
-            </button>
+
+        <div class="title">
+            🎉 โปรโมชั่นพิเศษ
+        </div>
+
+
+        <div class="description">
+
+            รายละเอียดโปรโมชั่นหรือข้อความ
+            ที่คุณต้องการสามารถใส่ตรงนี้ได้เลย
 
         </div>
 
+
+        <button
+            class="button green"
+            onclick="sendFlexCard()"
+        >
+            📤 ส่งการ์ดให้เพื่อน
+        </button>
+
+
     </div>
 
-    <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+
+</div>
+
+
+
+<script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+
 
 <script>
 
-    const LIFF_ID = "2011088879-uJOA8rZe";
 
-    async function main() {
+const LIFF_ID = "2011088879-uJOA8rZe";
 
-        try {
 
-            await liff.init({
-                liffId: LIFF_ID
-            });
+async function initLIFF() {
 
-            console.log("LIFF เริ่มทำงานแล้ว");
+    try {
 
-        } catch (error) {
+        await liff.init({
+            liffId: LIFF_ID
+        });
 
-            console.error(error);
-
-        }
+        console.log("LIFF Ready");
 
     }
 
-    main();
+    catch (error) {
 
-    async function shareCard() {
-
-        if (!liff.isLoggedIn()) {
-
-            liff.login();
-
-            return;
-
-        }
-
-        if (!liff.isApiAvailable("shareTargetPicker")) {
-
-            alert("อุปกรณ์หรือ LINE เวอร์ชันนี้ไม่รองรับการแชร์");
-
-            return;
-
-        }
-
-        try {
-
-            await liff.shareTargetPicker([
-                {
-                    type: "text",
-                    text: "🎉 โปรโมชั่นพิเศษ\n\nดูรายละเอียดได้ที่นี่:\nhttps://lrb053.github.io/FriendCard/"
-                }
-            ]);
-
-        } catch (error) {
-
-            console.error(error);
-
-            alert("ไม่สามารถแชร์ได้");
-
-        }
+        console.error("LIFF Error:", error);
 
     }
+
+}
+
+
+
+async function sendFlexCard() {
+
+
+    if (!liff.isApiAvailable("shareTargetPicker")) {
+
+        alert(
+            "ไม่สามารถเปิดหน้าส่งให้เพื่อนได้\n\n" +
+            "กรุณาเปิดหน้านี้ผ่าน LIFF ในแอป LINE"
+        );
+
+        return;
+
+    }
+
+
+
+    const flexMessage = {
+
+        type: "flex",
+
+        altText: "🎉 โปรโมชั่นพิเศษ",
+
+        contents: {
+
+            type: "bubble",
+
+
+            hero: {
+
+                type: "image",
+
+                url: "https://placehold.co/800x500",
+
+                size: "full",
+
+                aspectRatio: "20:13",
+
+                aspectMode: "cover"
+
+            },
+
+
+            body: {
+
+                type: "box",
+
+                layout: "vertical",
+
+                spacing: "md",
+
+                contents: [
+
+                    {
+
+                        type: "text",
+
+                        text: "🎉 โปรโมชั่นพิเศษ",
+
+                        weight: "bold",
+
+                        size: "xl"
+
+                    },
+
+
+                    {
+
+                        type: "text",
+
+                        text: "รายละเอียดโปรโมชั่นหรือข้อความที่คุณต้องการ",
+
+                        wrap: true,
+
+                        color: "#555555"
+
+                    }
+
+                ]
+
+            },
+
+
+            footer: {
+
+                type: "box",
+
+                layout: "vertical",
+
+                spacing: "sm",
+
+                contents: [
+
+                    {
+
+                        type: "button",
+
+                        style: "primary",
+
+                        action: {
+
+                            type: "uri",
+
+                            label: "ดูรายละเอียด",
+
+                            uri: "https://lrb053.github.io/FriendCard/"
+
+                        }
+
+                    }
+
+                ]
+
+            }
+
+        }
+
+    };
+
+
+
+    try {
+
+
+        await liff.shareTargetPicker([
+
+            flexMessage
+
+        ]);
+
+
+    }
+
+    catch (error) {
+
+        console.error(error);
+
+        alert(
+            "เกิดข้อผิดพลาดในการส่งการ์ด"
+        );
+
+    }
+
+}
+
+
+
+initLIFF();
+
 
 </script>
 
+
 </body>
+
 </html>
